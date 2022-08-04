@@ -1,12 +1,16 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
 
 class Main{
-	public static void main(String[] args)  {
-		Scanner sc = new Scanner(System.in);
-		
-		int N = sc.nextInt();
+	public static void main(String[] args) throws NumberFormatException, IOException  {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		int N = Integer.parseInt(br.readLine());
 		Queue<Integer> queue = new LinkedList<>();
 		for (int i = 1; i <= N; i++) {
 			queue.add(i);
@@ -15,6 +19,8 @@ class Main{
 			queue.remove();
 			queue.add(queue.poll());
 		}
-		System.out.println(queue.peek());
+		bw.write(queue.peek().toString());
+		bw.flush();
+		bw.close();
 	}
 }
