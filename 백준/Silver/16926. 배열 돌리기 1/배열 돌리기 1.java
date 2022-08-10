@@ -3,11 +3,6 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main{
-	static int N,M,R;
-	static int[][] arr;
-	static int[] directionX = {0,1,0,-1}; 
-	static int[] directionY = {1,0,-1,0};
-	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
