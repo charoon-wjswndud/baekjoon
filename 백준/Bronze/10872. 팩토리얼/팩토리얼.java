@@ -7,12 +7,9 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		int factorialNum = Integer.parseInt(br.readLine());
-		int result = 0;
-		if(factorialNum == 0) result = 1;
-		else result = factorial(factorialNum);
-		System.out.println(result);
+		System.out.println(factorial(factorialNum));
 	}
 	private static int factorial(int factorialNum) {
-		return (factorialNum == 1 ? 1:factorial(factorialNum-1))*factorialNum;
+		return (factorialNum <= 1) ? 1 : (factorial(factorialNum-1)*factorialNum);
 	}
 }
