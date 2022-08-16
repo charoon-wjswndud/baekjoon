@@ -19,7 +19,6 @@ public class Solution {
 			char[] numbers = Integer.toString(number).toCharArray();
 			result = 0;
 			
-			if(numbers.length<count) count = numbers.length;
 			dfs(count,0, numbers);
 				
 			sb.append(result);
