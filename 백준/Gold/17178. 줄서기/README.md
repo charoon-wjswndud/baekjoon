@@ -22,19 +22,19 @@
 
 <p>위의 예시를 예로 들면 다음과 같이 모든 사람들이 입장할 수 있다. 그림과는 달리 대기 공간에는 무한히 많은 사람들이 들어올 수 있다는 것에 주의하여야 한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/9827f814-14b0-4334-8af0-10a89be7a623/-/preview/"></p>
+<p style="text-align: center;"><img alt="" src=""></p>
 
 <p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/d21ef9b6-6de8-4640-8822-b142f4cccf6c/-/preview/"></p>
 
 <p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/8af4d04f-6fa2-40d4-ad4c-d21cd50f8389/-/preview/"></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/6ce1200a-d930-4d6a-9a45-f785857737b8/-/preview/"></p>
+<p style="text-align: center;"><img alt="" src=""></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/828c1fd8-a5d8-4728-980a-f7371db21328/-/preview/"></p>
+<p style="text-align: center;"><img alt="" src=""></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/aa24fa18-f5cb-4a1c-9fd7-e88c38bd1c31/-/preview/"></p>
+<p style="text-align: center;"><img alt="" src=""></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/4433b135-81c3-4b12-9431-e761c71dd6cd/-/preview/"></p>
+<p style="text-align: center;"><img alt="" src=""></p>
 
 <p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/052561a8-730e-43ab-b929-2ebe0d6ff31d/-/preview/"></p>
 
