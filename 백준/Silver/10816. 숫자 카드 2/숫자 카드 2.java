@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -9,51 +11,28 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
-		int[] arr = Arrays.stream(br.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.sorted()
-				.toArray();
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		HashMap<Integer, Integer> map = new HashMap<>();
+		for (int n = 0; n < N; n++) {
+			int key = Integer.parseInt(st.nextToken());
+			if (map.containsKey(key))
+				map.put(key, map.get(key) + 1);
+			else
+				map.put(key, 1);
+		}
 
 		int M = Integer.parseInt(br.readLine());
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		st = new StringTokenizer(br.readLine());
 		for (int m = 0; m < M; m++) {
-
-			//카드 검색
-			int target = Integer.parseInt(st.nextToken());
-
-			sb.append(upperBound(arr, target) - lowerBound(arr, target)).append(" ");
-		}
-		System.out.print(sb);
-	}
-
-	private static int upperBound(int[] arr, int target) {
-		int min = 0;
-		int max = arr.length;
-
-		while (min < max) {
-			int mid = (min + max) / 2;
-
-			if (target < arr[mid])
-				max = mid;
+			int key = Integer.parseInt(st.nextToken());
+			if (map.containsKey(key))
+				sb.append(map.get(key));
 			else
-				min = mid + 1;
+				sb.append(0);
+
+			sb.append(" ");
 		}
-		return min;
-	}
-
-	private static int lowerBound(int[] arr, int target) {
-		int min = 0;
-		int max = arr.length;
-
-		while (min < max) {
-			int mid = (min + max) / 2;
-
-			if (target <= arr[mid])
-				max = mid;
-			else
-				min = mid + 1;
-		}
-
-		return min;
+		System.out.println(sb);
 	}
 }
