@@ -1,22 +1,29 @@
-import java.util.Scanner;
+//java8
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-        
-		float[] record = new float[N];
-		float max = 0;
-		float avg = 0;
-		
-		for(int i=0; i<record.length; i++) {
-			record[i] = sc.nextInt();
-			if(record[i]>max)
-				max = record[i];
-		}
-		
-		for(int j=0; j<record.length; j++)
-			avg += (record[j]/max*100)/N;
-		System.out.print(avg);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[] arr = new int[N];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int highScore = Integer.MIN_VALUE;
+        for (int n = 0; n < N; n++){
+            arr[n] = Integer.parseInt(st.nextToken());
+            highScore = Math.max(arr[n], highScore);
+        }
+
+        double totalScore = 0;
+        for (int score:arr)
+            totalScore += forgery(score, highScore);
+
+        System.out.print(totalScore/arr.length);
+    }
+
+    private static double forgery(double score, double highScore) {
+        return score/highScore*100;
+    }
 }
