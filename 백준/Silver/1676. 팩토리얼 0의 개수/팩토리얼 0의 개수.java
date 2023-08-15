@@ -1,13 +1,55 @@
-import java.util.Scanner;
-public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int num = sc.nextInt();
-		int cnt = 0;
-		while (num >= 5) {
-			cnt += num / 5;
-			num /= 5;
-		}
-		System.out.print(cnt);
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Main{
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		System.out.print(N/5+N/25+N/125);
 	}
 }
+/*
+-------------0
+0	1
+1	1
+2	2
+3	6
+4	24
+---------------1
+5	120
+6	720
+7	5040
+8	40320
+9	362880
+---------------2
+10	3628800
+11	39916800
+12	479001600
+13	6227020800
+14	87178291200
+---------------3
+15	1307674368000
+16	20922789888000
+17	355687428096000
+18	6402373705728000
+19	121645100408832000
+---------------4
+20	2432902008176640000
+21	51090942171709440000
+22	1124000727777607680000
+23	25852016738884976640000
+24	620448401733239439360000
+-----------------6
+25	15511210043330985984000000
+26	403291461126605635584000000
+28	304888344611713860501504000000
+---------------------7
+30 265252859812191058636308480000000
+---------------------10
+49	608281864034267560872252163321295376887552831379210240000000000
+----------------------12
+50	30414093201713378043612608166064768844377641568960512000000000000
+-----------------------18
+75
+ */
