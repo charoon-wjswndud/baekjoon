@@ -9,7 +9,6 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
-
 		List<Human> people = new ArrayList<>();
 		for (int i = 0; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
@@ -29,10 +28,7 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		for (Human human: people)
 			sb.append(human.rank).append(" ");
-
 		System.out.println(sb);
-
-
 	}
 	private static class Human {
 		int x;
