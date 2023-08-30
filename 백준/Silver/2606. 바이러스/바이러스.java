@@ -1,40 +1,41 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	static int[][] dp;
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		int infection = 0;
-		int vertex = Integer.parseInt(br.readLine());	
-		int edge = Integer.parseInt(br.readLine());		
-		
-		int[][] graph = new int[vertex+1][vertex+1];
-		
-		for (int com = 0; com < edge; com++) {
-			st = new StringTokenizer(br.readLine());
-			int vertex1 = Integer.parseInt(st.nextToken());
-			int vertex2 = Integer.parseInt(st.nextToken());
-			graph[vertex1][vertex2] = 1;
-			graph[vertex2][vertex1] = 1;
+		int N = Integer.parseInt(br.readLine())+1;
+		int M = Integer.parseInt(br.readLine());
+		boolean[][] graph = new boolean[N][N];
+
+		for (int i = 0; i < M; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int node1 = Integer.parseInt(st.nextToken());
+			int node2 = Integer.parseInt(st.nextToken());
+			graph[node1][node2] = true;
+			graph[node2][node1] = true;
 		}
-		boolean[] visited = new boolean[vertex+1];
-		Stack<Integer> stack = new Stack<>();
-		stack.push(1);
+
+		Queue<Integer> queue = new LinkedList<>();
+		boolean[] visited = new boolean[N];
+		int cnt = 0;
+		queue.add(1);
 		visited[1] = true;
-		while(!stack.isEmpty()) {
-			int computer = stack.pop();
-			infection++;
-			for (int row = 1; row <= vertex; row++) {
-				if(graph[computer][row] == 1 && !visited[row]) {
-					stack.push(row);
-					visited[row] = true;
+		while (!queue.isEmpty()) {
+			int node = queue.poll();
+			for (int i = 1; i < N; i++) {
+				if (graph[node][i] && !visited[i]) {
+					queue.add(i);
+					visited[i] = true;
+					cnt++;
 				}
 			}
 		}
-		System.out.println(infection-1);
+		System.out.println(cnt);
 	}
 }
