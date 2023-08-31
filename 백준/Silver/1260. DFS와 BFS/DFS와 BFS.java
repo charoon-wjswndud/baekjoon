@@ -1,86 +1,71 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class Main {
-	static boolean[][] graph;
-	static int N;
-	static int M;
-	static int V;
+public class Main{
+	static int[] dp = new int[11];
 	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		V = Integer.parseInt(st.nextToken());
-		
-		graph = new boolean[N+1][N+1];
-		
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int V = Integer.parseInt(st.nextToken());
+
+		//입력
+		boolean[][] graph1 = new boolean[N+1][N+1];
+		boolean[][] graph2 = new boolean[N+1][N+1];
+		boolean[] visited1 = new boolean[N+1];
+		boolean[] visited2 = new boolean[N+1];
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int node1 = Integer.parseInt(st.nextToken());
 			int node2 = Integer.parseInt(st.nextToken());
-			graph[node1][node2] = true;
-			graph[node2][node1] = true;
+			graph1[node1][node2] = true;
+			graph1[node2][node1] = true;
+			graph2[node1][node2] = true;
+			graph2[node2][node1] = true;
 		}
-		
-		toString(dfs());
-		toString(bfs());
-	}
-	private static LinkedList<Integer> bfs() {
-		boolean[] visited = new boolean[N+1];
+
+		//dfs
+		Stack<Integer> stack = new Stack<>();
+		stack.add(V);
+		sb.append(V).append(" ");
+		visited1[V] = true;
+		while (!stack.isEmpty()) {
+			int pop = stack.peek();
+			boolean check = true;
+			for (int i = 1; i <= N; i++) {
+				if (graph1[pop][i] && !visited1[i]) {
+					stack.add(i);
+					visited1[i] = true;
+					check = false;
+					sb.append(i).append(" ");
+					break;
+				}
+			}
+			if (check)
+				stack.pop();
+		}
+		sb.append("\n");
+
+		//bfs;
 		Queue<Integer> queue = new LinkedList<>();
-		LinkedList<Integer> list = new LinkedList<>();
 		queue.add(V);
-		visited[V] = true;
-		while(!queue.isEmpty()) {
-			int temp = queue.remove();
-			list.add(temp);
-			for (int b = 1; b < N+1; b++) {
-				if(graph[temp][b] && !visited[b]) {
-					queue.add(b);
-					visited[b] = true;
+		visited2[V] = true;
+		while (!queue.isEmpty()) {
+			int pop = queue.poll();
+			sb.append(pop).append(" ");
+			for (int i = 1; i <= N; i++) {
+				if (graph2[pop][i] && !visited2[i]){
+					queue.add(i);
+					visited2[i] = true;
 				}
 			}
 		}
-		return list;
-	}
-	
-	private static LinkedList<Integer> dfs() {
-		boolean[] visited = new boolean[N+1];
-		Stack<Integer> stack = new Stack<>();
-		LinkedList<Integer> list = new LinkedList<>();
-		stack.add(V);
-		visited[V] = true;
-		while(!stack.isEmpty()) {
-			findFirstChildNode(stack, visited, list);
-		}
-		
-		return list;
-	}
-	
-	private static void findFirstChildNode(Stack<Integer> stack, boolean[] visited, LinkedList<Integer> list) {
-		int temp = stack.peek();
-		list.add(temp);
-		for (int b = 1; b < N+1; b++) {
-			if(graph[temp][b] && !visited[b]) {
-				stack.add(b);
-				visited[b] = true;
-				findFirstChildNode(stack, visited, list);
-			}
-		}
-		stack.pop();
-		return;
-	}
-	public static void toString(LinkedList<Integer> list) {
-		StringBuilder sb = new StringBuilder();
-		for (Integer integer : list) {
-			sb.append(integer + " ");
-		}
+
+		//print
 		System.out.println(sb);
 	}
 }
