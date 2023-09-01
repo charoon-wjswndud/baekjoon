@@ -1,64 +1,67 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
 
-public class Main {
+public class Main{
+	static int[][] np = {{1,0},{0,1},{-1,0},{0,-1}};
+	static int M, N;
+ 	public static void main(String[] args) throws IOException {
+		BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		int testCase = Integer.parseInt(br.readLine());
-		for (int i = 1; i <= testCase; i++) {
-			st = new StringTokenizer(br.readLine());
-			int M = Integer.parseInt(st.nextToken());	//가로
-			int N = Integer.parseInt(st.nextToken());	//세로
-			int cabbage = Integer.parseInt(st.nextToken());
-			
-			//농경지 배추 심기
-			boolean[][] farm = new boolean[N+2][M+2];	//쉬운 탐색을 위해 false로 감싸기
-			for (int j = 0; j < cabbage; j++) {
+		int T = Integer.parseInt(br.readLine());
+		while (0 < T--) {
+			//입력
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			M = Integer.parseInt(st.nextToken());
+			N = Integer.parseInt(st.nextToken());
+			int K = Integer.parseInt(st.nextToken());
+			boolean[][] map = new boolean[N][M];
+			for (int i = 0; i < K; i++) {
 				st = new StringTokenizer(br.readLine());
-				int X = Integer.parseInt(st.nextToken())+1;
-				int Y = Integer.parseInt(st.nextToken())+1;
-				farm[Y][X] = true;
+				int X = Integer.parseInt(st.nextToken());
+				int Y = Integer.parseInt(st.nextToken());
+				map[Y][X] = true;
 			}
-			boolean[][] visited = new boolean[N+2][M+2];	//탐색한 곳 체크할 배열
-			int earthworm = 0;
-			for (int row = 1; row < farm.length; row++) {
-				for (int column = 1; column < farm[0].length; column++) {
-					if(farm[row][column] && !visited[row][column]) {
-						dfs(new Coordinate(row, column), farm, visited);
-						earthworm++;
+
+			int wormNum = 0;
+			boolean[][] visited = new boolean[N][M];
+			for (int m = 0; m < M; m++) {
+				for (int n = 0; n < N; n++) {
+					if (map[n][m] && !visited[n][m]) {
+						wormNum++;
+						bfs(map, visited, n, m);
 					}
 				}
 			}
-			System.out.println(earthworm);
+			sb.append(wormNum).append("\n");
 		}
+		System.out.print(sb);
 	}
-	private static void dfs(Coordinate coordinate, boolean[][] farm, boolean[][] visited) {
-		int[] dx = {1, 0, -1, 0};	//우 하 좌 상
-		int[] dy = {0, 1, 0, -1};	//우 하 좌상 
-		Stack<Coordinate> stack = new Stack<>();		
-		stack.push(coordinate);
-		while(!stack.isEmpty()) {
-			Coordinate temp = stack.pop();
-			visited[temp.row][temp.column] = true;
-			for (int i = 0; i < 4; i++) {
-				if(farm[temp.row+dy[i]][temp.column+dx[i]] && !visited[temp.row+dy[i]][temp.column+dx[i]]) {
-					stack.push(new Coordinate(temp.row+dy[i], temp.column+dx[i]));
-				}
+
+	private static void bfs(boolean[][] map, boolean[][] visited, int y, int x) {
+		Queue<Point> queue = new LinkedList<>();
+		queue.add(new Point(x, y));
+		visited[y][x] = true;
+		while (!queue.isEmpty()) {
+			Point p = queue.poll();
+			for (int k = 0; k < 4; k++) {
+				int nx = p.x + np[k][1];
+				int ny = p.y + np[k][0];
+				//인덱스 범위 밖 제외
+				if (nx < 0 || M <= nx || ny < 0 || N <= ny)
+					continue;
+				//배추가 없는 곳 제외
+				if (!map[ny][nx])
+					continue;
+				//이미 방문한 곳 제외
+				if (visited[ny][nx])
+					continue;
+				queue.add(new Point(nx, ny));
+				visited[ny][nx] = true;
 			}
-		}
-	}
-	static class Coordinate{
-		int row;
-		int column;
-		public Coordinate(int row, int column) {
-			super();
-			this.row = row;
-			this.column = column;
 		}
 	}
 }
