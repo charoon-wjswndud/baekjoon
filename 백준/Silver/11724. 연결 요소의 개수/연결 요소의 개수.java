@@ -5,52 +5,45 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+public class Main{
+	static int N, M;
+ 	public static void main(String[] args) throws IOException {
+		BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		int N = Integer.parseInt(st.nextToken())+1;
-		int M = Integer.parseInt(st.nextToken());
-		boolean[][] graph = new boolean[N][N];
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		boolean[][] graph = new boolean[N+1][N+1];
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
-			
-			graph[start][end] = true;
-			graph[end][start] = true;
+			int node1 = Integer.parseInt(st.nextToken());
+			int node2 = Integer.parseInt(st.nextToken());
+			graph[node1][node2] = true;
+			graph[node2][node1] = true;
 		}
-		solution(graph, N);
+
+		int cnt = 0;
+		boolean[] visited = new boolean[N+1];
+		for (int i = 1; i <= N; i++) {
+			if (visited[i]) {
+				continue;
+			}
+			bfs(graph,visited, i);
+			cnt++;
+		}
+		System.out.println(cnt);
 	}
 
-	private static void solution(boolean[][] graph, int N) {
-		int result = 0;
-		boolean[] visited = new boolean[N];
-		for (int row = 1; row < graph.length; row++) {
-			for (int column = 1; column < graph.length; column++) {
-				if(graph[row][column] && !visited[row]) {
-					bfs(graph, visited, N, row);
-					result++;
-				}
-			}
-		}
-		for (int i = 1; i < visited.length; i++) {
-			if(!visited[i]) result++;
-		}
-		System.out.println(result);
-	}
-	
-	private static void bfs(boolean[][] graph, boolean[] visited, int N, int row) {
+	private static void bfs(boolean[][] graph, boolean[] visited, int i) {
 		Queue<Integer> queue = new LinkedList<>();
-		queue.add(row);
-		visited[row] = true;
-		while(!queue.isEmpty()) {
-			int now = queue.poll();
-			for (int i = 1; i < graph[now].length; i++) {
-				if(graph[now][i] && !visited[i]) {
-					queue.add(i);
-					visited[i] = true;
+		queue.add(i);
+		visited[i] = true;
+		while (!queue.isEmpty()) {
+			int num = queue.poll();
+			for (int j = 1; j <= N; j++) {
+				if (graph[num][j] && !visited[j]) {
+					queue.add(j);
+					visited[j] = true;
 				}
 			}
 		}
