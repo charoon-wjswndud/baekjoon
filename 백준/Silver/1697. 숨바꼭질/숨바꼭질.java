@@ -4,60 +4,46 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
-/*
- * bfs로 x-1, x+1, x*2 탐색
- * 목표인덱스값이 변경될 경우 바로 출력
- */
+
 public class Main {
-	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		int[] arr = new int[100001];
-		
 		int N = Integer.parseInt(st.nextToken());
 		int K = Integer.parseInt(st.nextToken());
-		if(N == K) {
-			System.out.println(0);
-		}else {
-			System.out.println(bfs(arr, N, K));
-		}
-	}
+		boolean[] visited = new boolean[100_001];
+		Queue<Subin> queue = new LinkedList<>();
 
-	private static int bfs(int[] arr, int N, int K) {
-		Queue<Integer> queue = new LinkedList<Integer>();
-		queue.add(N);
-		arr[N] = 1;
-		while(!queue.isEmpty()) {
-			int spotIndex = queue.remove();
-			
-			for (int i = 0; i < 3; i++) {
-				int nextSpotIndex = calc(i, spotIndex);
-				
-				if(nextSpotIndex == K) {
-					return arr[spotIndex];
+		queue.add(new Subin(N, 0));
+		visited[N] = true;
+		while (true) {
+			Subin now = queue.poll();
+			if (now.n == K){
+				System.out.println(now.cnt);
+				break;
+			}else {
+				if (now.n+1 <= 100000 && !visited[now.n+1]) {
+					queue.add(new Subin(now.n + 1, now.cnt + 1));
+					visited[now.n+1] = true;
 				}
-				
-				if( 0 <= nextSpotIndex && nextSpotIndex < arr.length && arr[nextSpotIndex] == 0) {
-					arr[nextSpotIndex] = arr[spotIndex] + 1;
-					queue.add(nextSpotIndex);
+				if (0 <= now.n-1 && !visited[now.n-1]) {
+					queue.add(new Subin(now.n-1, now.cnt+1));
+					visited[now.n-1] = true;
+				}
+				if(now.n*2 <= 100000 && !visited[now.n*2]) {
+					queue.add(new Subin(now.n * 2, now.cnt + 1));
+					visited[now.n*2] = true;
 				}
 			}
 		}
-		return -1;
 	}
+	static class Subin{
+		int n;
+		int cnt;
 
-	private static int calc(int i, int spotIndex) {
-		switch (i) {
-		case 0:
-			return spotIndex - 1;
-		case 1:
-			return spotIndex + 1;
-		case 2:
-			return spotIndex * 2;
+		public Subin(int k, int cnt) {
+			this.n = k;
+			this.cnt = cnt;
 		}
-		return -1;
 	}
-
 }
