@@ -1,50 +1,49 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 public class Main {
-	static class Meeting implements Comparable<Meeting>{
-		int start;
-		int end;
-		
-		public Meeting(int start, int end) {
-			super();
-			this.start = start;
-			this.end = end;
-		}	
-		@Override
-		public int compareTo(Meeting o) {
-			return this.end != o.end ? this.end-o.end : this.start-o.start;
-		}
-	}
-	
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N= sc.nextInt();
-		
-		Meeting[] meetings = new Meeting[N];
-		
+	static int r, c;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		PriorityQueue<Point> list = new PriorityQueue<>();
 		for (int i = 0; i < N; i++) {
-			meetings[i] = new Meeting(sc.nextInt(), sc.nextInt());
+			st = new StringTokenizer(br.readLine());
+			list.add(new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
 		}
-		
-		List<Meeting> result = getSchedule(meetings);
-		System.out.println(result.size());
-	}
 
-	private static List<Meeting> getSchedule(Meeting[] meetings) {
-		List<Meeting> result = new ArrayList<Meeting>();
-		Arrays.sort(meetings);
-		result.add(meetings[0]);
-		
-		for (int i = 1, size = meetings.length; i < size; i++) {
-			if( result.get(result.size()-1).end <= meetings[i].start) {
-				result.add(meetings[i]);
+		int cnt = 1;
+		Point now = list.poll();
+		while (!list.isEmpty()) {
+			Point next = list.poll();
+			if (now.y <= next.x) {
+				now = next;
+				cnt++;
 			}
 		}
-		
-		return result;
+
+		System.out.println(cnt);
 	}
 
+	private static class Point implements Comparable<Point>{
+		int x;
+		int y;
+
+		public Point(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		@Override
+		public int compareTo(Point o) {
+			if (this.y == o.y)
+				return Integer.compare(this.x, o.x);
+			else
+				return Integer.compare(this.y, o.y);
+		}
+	}
 }
