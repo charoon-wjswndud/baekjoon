@@ -1,78 +1,56 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
-
-import javax.naming.CommunicationException;
+import java.util.*;
 
 public class Main {
-	static int N;
-	static int M;
-	static boolean[][] arr;
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());;
-		
-		arr = new boolean[N][M];
-		for (int i = 0; i < N; i++) {
-			String line = br.readLine();
-			for (int j = 0; j < M; j++) {
-				arr[i][j] = (line.charAt(j) == '1')? true : false; 
+		int Y = Integer.parseInt(st.nextToken());
+		int X = Integer.parseInt(st.nextToken());
+		boolean[][] map = new boolean[Y][X];
+		boolean[][] visited = new boolean[Y][X];
+		for (int i = 0; i < Y; i++) {
+			char[] line = br.readLine().toCharArray();
+			for (int j = 0; j < X; j++) {
+				map[i][j] = line[j] == '1';
 			}
 		}
-		
-		System.out.println(bfs(new Coordinate(0, 0)));
-	}
 
-	private static int bfs(Coordinate coordinate) {
-		Queue<Coordinate> queue = new LinkedList<>();
-		coordinate.count = 1;
-		queue.add(coordinate);
-		arr[0][0] = false;
-		while(!queue.isEmpty()) {
-			Coordinate now = queue.poll();
-			for (int i = 0; i < 4; i++) {
-				try {
-					Coordinate next = getNext(now, i);
-					next.count = now.count + 1;
-					
-					if(!arr[next.row][next.column]) continue;	//경로 밖
-					if(N-1 == next.row && M-1 == next.column) return next.count;	//도착
-					
-					arr[next.row][next.column] = false;
-					queue.add(next);
-				} catch (IndexOutOfBoundsException e) {
-					continue;
-				}
-			}
-		}
-		return -1;
-	}
-	
-	private static Coordinate getNext(Coordinate now, int i) throws IndexOutOfBoundsException{
 		int[] dy = {0, 1, 0, -1};
 		int[] dx = {1, 0, -1, 0};
-		int row = now.row + dy[i];
-		int column = now.column + dx[i];
-		
-		if(!(0 <= row && row < N && 0 <= column && column <M)) throw new IndexOutOfBoundsException();
-		return new Coordinate(row, column);
+		Queue<CustomPoint> queue = new LinkedList<>();
+		queue.add(new CustomPoint(0, 0, 1));
+		visited[0][0] = true;
+		CustomPoint last = null;
+		while (!queue.isEmpty()) {
+			CustomPoint now = queue.poll();
+			last = now;
+			if (now.x == X-1 && now.y == Y-1)
+				break;
+			for (int i = 0; i < 4; i++) {
+				int nx = now.x + dx[i];
+				int ny = now.y + dy[i];
+				if (nx < 0 || X <= nx || ny < 0 || Y <= ny)
+					continue;
+				if (visited[ny][nx])
+					continue;
+				if (!map[ny][nx])
+					continue;
+				queue.add(new CustomPoint(nx, ny, now.cnt+1));
+				visited[ny][nx] = true;
+			}
+		}
+		System.out.println(last.cnt);
 	}
+	private static class CustomPoint extends Point{
+		int cnt;
 
-	static class Coordinate{
-		int row;
-		int column;
-		int count = 0;
-		public Coordinate(int row, int column) {
-			super();
-			this.row = row;
-			this.column = column;
+		public CustomPoint(int x, int y, int cnt) {
+			super(x, y);
+			this.cnt = cnt;
 		}
 	}
 }
