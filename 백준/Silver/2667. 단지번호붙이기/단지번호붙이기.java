@@ -1,92 +1,63 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class Main {
-	static int N;
-	static boolean[][] arr;
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		N = Integer.parseInt(br.readLine());
-		arr = new boolean[N][N];
-		
+		int N = Integer.parseInt(br.readLine());
+		boolean[][] map = new boolean[N][N];
+		boolean[][] visited = new boolean[N][N];
 		for (int i = 0; i < N; i++) {
-			String line = br.readLine();
+			char[] line = br.readLine().toCharArray();
 			for (int j = 0; j < N; j++) {
-				arr[i][j] = (line.charAt(j) == '0')? false : true;
+				map[i][j] = line[j] == '1';
 			}
 		}
-		
-		List<List<Position>> list = new ArrayList<>();
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = 0; j < arr.length; j++) {
-				if(arr[i][j]) {
-					list.add(bfs(new Position(i, j, 1)));
-				}
-			}
-		}
-		List<List<Position>> sortList = new ArrayList<>();
-		StringBuilder sb= new StringBuilder(list.size() + "\n");
-		while (!list.isEmpty()) {
-			int minSizeIndex = 0;
-			if(list.size() == 1) {
-				sortList.add(list.get(0));
-				list.remove(0);
-				break;
-			}
-			else {
-				for (int i = 0; i < list.size(); i++) {
-					if(list.get(minSizeIndex).size() > list.get(i).size()) {
-						minSizeIndex = i;
+
+		List<Integer> townList = new LinkedList<>();
+		int[] dy = {0, 1, 0, -1};
+		int[] dx = {1, 0, -1, 0};
+		for (int y = 0; y < N; y++) {
+			for (int x = 0; x < N; x++) {
+				if (!map[y][x])
+					continue;
+				if (visited[y][x])
+					continue;
+				Queue<Point> queue = new LinkedList<>();
+				queue.add(new Point(x, y));
+				visited[y][x] = true;
+				int cnt = 1;
+				while (!queue.isEmpty()) {
+					Point now = queue.poll();
+					for (int i = 0; i < 4; i++) {
+						int ny = now.y + dy[i];
+						int nx = now.x + dx[i];
+						if (ny < 0 || N <= ny || nx < 0 ||N <= nx)
+							continue;
+						if (visited[ny][nx])
+							continue;
+						if (!map[ny][nx])
+							continue;
+						queue.add(new Point(nx, ny));
+						visited[ny][nx] = true;
+						cnt++;
 					}
 				}
-				sortList.add(list.get(minSizeIndex));
-				list.remove(minSizeIndex);
+				townList.add(cnt);
 			}
 		}
-		for (List<Position> list2 : sortList) {
-			sb.append(list2.size() + "\n");
+		Collections.sort(townList);
+		StringBuilder sb = new StringBuilder().append(townList.size()).append("\n");
+		for (int town:
+			 townList) {
+			sb.append(town).append("\n");
 		}
-		System.out.println(sb);
+		System.out.print(sb);
 	}
-	private static ArrayList<Position> bfs(Position position) {
-		int[] dx = {1, 0, -1, 0};
-		int[] dy = {0, 1, 0, -1};
-		ArrayList<Position> list = new ArrayList<>();
-		Queue<Position> queue = new LinkedList<>();
-		list.add(position);
-		queue.add(position);
-		arr[position.row][position.column] = false;
-		while(!queue.isEmpty()) {
-			Position now = queue.poll();
-			for (int i = 0; i < 4; i++) {
-				int row = now.row + dy[i];
-				int column = now.column + dx[i];
-				if(0<=row && row < N && 0 <= column && column < N && arr[row][column] ) {
-					Position next = new Position(row, column, now.count+1);
-					queue.add(next);
-					list.add(next);
-					arr[row][column] = false;
-				}
-			}
-		}
-		return list;
-	}
-	static class Position{
-		int row;
-		int column;
-		int count;
-		public Position(int row, int column, int count) {
-			super();
-			this.row = row;
-			this.column = column;
-			this.count = count;
-		}
-	}
-	
 }
