@@ -1,81 +1,64 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.NoSuchElementException;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
-	static boolean toggleFirstLast;	//first == false, last = true
-	static StringBuffer sb = new StringBuffer();
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int testCase = Integer.parseInt(br.readLine());
-		
-		for (int i = 0; i < testCase; i++) {
-			toggleFirstLast = false;
-			char[] P = parsing(br.readLine());
-			Deque<Integer> deque = makeDeque(Integer.parseInt(br.readLine()), br.readLine());
-			try {
-				for (char p : P) {
-					if(p == 'R') toggle();
-					else {
-						delete(deque);
+		int T = Integer.parseInt(br.readLine());
+		StringBuilder asb = new StringBuilder();
+		while (0 < T--) {
+			char[] command = br.readLine().toCharArray();
+			int N = Integer.parseInt(br.readLine());
+			Deque<Integer> deque = new LinkedList<>();
+			StringBuilder temp = new StringBuilder(br.readLine());
+			temp.delete(temp.length()-1, temp.length()).delete(0,1);
+			StringTokenizer st = new StringTokenizer(temp.toString(), ",");
+			for (int i = 0; i < N; i++) {
+				deque.add(Integer.parseInt(st.nextToken()));
+			}
+
+			StringBuilder sb = new StringBuilder();
+			boolean state = true;
+			for (int i = 0; i < command.length; i++) {
+				if (command[i] == 'R') {
+					state = !state;
+				}else {
+					Integer num = null;
+					if (state) {
+						num = deque.pollFirst();
+					}else
+						num = deque.pollLast();
+					if (num == null) {
+						sb.delete(0, sb.length());
+						sb.append("error").append("\n");
+						break;
 					}
 				}
-				print(deque);
-			} catch (NoSuchElementException e) {
-					sb.append("error");
-			} 
-			sb.append("\n");
-		}
-		System.out.print(sb);
-	}
-
-	private static void print(Deque<Integer> deque) {
-		sb.append("[");
-		if(toggleFirstLast) {
-			while(!deque.isEmpty()) {
-				sb.append(deque.removeLast());
-				if(deque.peekLast() != null) sb.append(",");
 			}
-		}else {
-			while(!deque.isEmpty()) {
-				sb.append(deque.removeFirst());
-				if(deque.peekFirst() != null) sb.append(",");
+			if (sb.length() == 6) {
+				asb.append(sb);
+				continue;
 			}
+			sb.append("[");
+
+			while (!deque.isEmpty()) {
+				if (state)
+					sb.append(deque.pollFirst());
+				else
+					sb.append(deque.pollLast());
+				sb.append(",");
+			}
+			if (sb.charAt(sb.length()-1) == ',')
+				sb.replace(sb.length()-1,sb.length(), "]").append("\n");
+			else
+				sb.append("]").append("\n");
+
+			asb.append(sb);
 		}
-		
-		sb.append("]");
+		System.out.println(asb);
 	}
-
-	private static void delete(Deque<Integer> deque) throws NoSuchElementException{
-		if(toggleFirstLast) deque.removeLast();
-		else if(!toggleFirstLast) deque.removeFirst();
-	}
-
-	private static void toggle() {
-		toggleFirstLast = toggleFirstLast? false : true; 
-	}
-
-	private static Deque<Integer> makeDeque(int parseInt, String dequeString) {
-		Deque<Integer> deque = new ArrayDeque<>();
-		StringTokenizer st = new StringTokenizer(dequeString, "[],");
-		for (int i = 0; i < parseInt; i++) {
-			deque.add(Integer.parseInt(st.nextToken()));
-		}
-		return deque;
-	}
-
-	private static char[] parsing(String readLine) {
-		char[] p = new char[readLine.length()];
-		for (int i = 0; i < readLine.length(); i++) {
-			p[i] = readLine.charAt(i);
-		}
-		return p;
-	}
-	
-	
 }

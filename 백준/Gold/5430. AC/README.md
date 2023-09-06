@@ -4,11 +4,11 @@
 
 ### 성능 요약
 
-메모리: 90876 KB, 시간: 704 ms
+메모리: 114416 KB, 시간: 804 ms
 
 ### 분류
 
-덱(deque), 파싱(parsing), 구현(implementation), 문자열(string), 자료 구조(data_structures)
+덱, 파싱, 구현, 문자열, 자료 구조
 
 ### 문제 설명
 
