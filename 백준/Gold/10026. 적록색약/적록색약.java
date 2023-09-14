@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,80 +6,83 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Main {
+	static int N;
+	static int[][] paper;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		paper = new int[N][N];
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder("");
-		
-		
-		int N = Integer.parseInt(br.readLine());
-		char[][] arr = new char[N+2][N+2];
-		for (int row = 1; row < arr.length-1; row++) {
-			String line = br.readLine();
-			for (int column = 1; column < arr.length-1; column++) {
-				arr[row][column] = line.charAt(column-1);
+		for (int i = 0; i < N; i++) {
+			char[] line = br.readLine().toCharArray();
+			for (int j = 0; j < N; j++) {
+				if (line[j] == 'R')
+					paper[i][j] = 0;
+				else if (line[j] == 'G')
+					paper[i][j] = 1;
+				else
+					paper[i][j] = 2;
 			}
 		}
-		
-		//색맹전용 배열
-		char[][] colorWeaknessArr = new char[N+2][N+2];
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = 0; j < arr.length; j++) {
-				colorWeaknessArr[i][j] = arr[i][j];
+
+		StringBuilder sb = new StringBuilder();
+		int cnt = 0;
+		//적록색약이 아닌 사람
+		boolean[][] visited = new boolean[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (visited[i][j])
+					continue;
+				bfs(visited, i, j, false);
+				cnt++;
 			}
 		}
-		for (int i = 0; i < colorWeaknessArr.length; i++) {
-			for (int j = 0; j < colorWeaknessArr.length; j++) {
-				if(colorWeaknessArr[i][j] == 'G') colorWeaknessArr[i][j] = 'R';
+		sb.append(cnt).append(" ");
+
+		//적록색약인 사람
+		cnt = 0;
+		visited = new boolean[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (visited[i][j])
+					continue;
+				bfs(visited, i, j, true);
+				cnt++;
 			}
 		}
-		
-		sb.append(countArea(arr) + " ");
-		sb.append(countArea(colorWeaknessArr));
+		sb.append(cnt);
+
 		System.out.println(sb);
-		
 	}
 
-	private static int countArea(char[][] arr) {
-		int area = 0;
-		for (int color = 0; color < 3; color++) {
-			for (int indexY = 1; indexY < arr.length-1; indexY++) {
-				for (int indexX = 1; indexX < arr.length-1; indexX++) {
-					if(arr[indexY][indexX] != '\u0000') {
-						BFS(arr, new Coordinate(indexY, indexX), arr[indexY][indexX]);
-						area++;
-					}
-				}
-			}
-		}
-		return area;
-	}
-	
-	private static void BFS(char[][] arr, Coordinate coordinate, char RGB) {
-		int[] dx = {1, 0, -1, 0};
-		int[] dy = {0, 1, 0, -1};
-		Coordinate temp;
-		Queue<Coordinate> queue = new LinkedList<>();
-		queue.add(coordinate);
-		arr[coordinate.y][coordinate.x] = '\u0000';
-		while(!queue.isEmpty()) {
-			temp = queue.poll();
-			for (int direction = 0; direction < 4; direction++) {
-				if(arr[temp.y+dy[direction]][temp.x+dx[direction]] == RGB) {
-					queue.add(new Coordinate(temp.y+dy[direction], temp.x+dx[direction]));
-					arr[temp.y+dy[direction]][temp.x+dx[direction]] = '\u0000';
-				}
-			}
-		}
-	}
+	private static void bfs(boolean[][] visited, int y, int x, boolean dyschromatopsia) {
+		int[][] direction = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+		Queue<Point> queue = new LinkedList<>();
+		queue.add(new Point(x, y));
+		visited[y][x] = true;
+		while (!queue.isEmpty()) {
+			Point now = queue.poll();
+			for (int i = 0; i < 4; i++) {
+				int ny = now.y + direction[i][0];
+				int nx = now.x + direction[i][1];
 
-	static class Coordinate{
-		int x;
-		int y;
-		public Coordinate(int y, int x) {
-			super();
-			this.x = x;
-			this.y = y;
+				if (ny < 0 || N <= ny || nx < 0 || N <= nx)
+					continue;
+				if (dyschromatopsia) {
+					if (paper[now.y][now.x] == 2) {
+						if (paper[ny][nx] < 2)
+							continue;
+					} else
+						if (paper[ny][nx] == 2)
+							continue;
+				} else
+					if (paper[ny][nx] != paper[now.y][now.x])
+						continue;
+				if (visited[ny][nx])
+					continue;
+				queue.add(new Point(nx, ny));
+				visited[ny][nx] = true;
+			}
 		}
 	}
 }
