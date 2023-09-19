@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,86 +7,56 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-	static int N, result=1;
+	static int N;
 	static int[][] map;
-	static boolean[][] visited;
-	static int[] dr = {1,-1,0,0};
-	static int[] dc = {0,0,1,-1};
-
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = null;
-
 		N = Integer.parseInt(br.readLine());
 		map = new int[N][N];
-		visited = new boolean[N][N];
 
-		int max = 0; 
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < N; j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if(map[i][j]>max) max = map[i][j];
+		int max = 0;
+		for (int y = 0; y < N; y++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int x = 0; x < N; x++) {
+				map[y][x] = Integer.parseInt(st.nextToken());
+				max = Math.max(max, map[y][x]);
 			}
 		}
-
-		for (int h = 1; h <= max; h++) {
-			init();
-
+		int maxSafeArea = Integer.MIN_VALUE;
+		for (int r = 0; r <= max; r++) {
 			int cnt = 0;
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < N; j++) {
-					if(map[i][j]>h && !visited[i][j]) {
+			boolean[][] visited = new boolean[N][N];
+			for (int y = 0; y < N; y++) {
+				for (int x = 0; x < N; x++) {
+					if (r < map[y][x] && !visited[y][x]){
+						bfs(visited, r, new Point(x, y));
 						cnt++;
-						dfs(i,j,h);
 					}
 				}
 			}
-			result = Math.max(cnt, result);
+			maxSafeArea = Math.max(maxSafeArea, cnt);
 		}
-		System.out.println(result);
+		System.out.println(maxSafeArea);
 	}
 
-	private static void init() {
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				visited[i][j]=false;
-			}
-		}
-	}
-
-	private static void dfs(int r, int c, int h) {
-		visited[r][c]=true;
-
-		for (int i = 0; i < 4; i++) {
-			int nr = r+dr[i];
-			int nc = c+dc[i];
-
-			if(nr<0||nc<0||nr>=N||nc>=N||
-					map[nr][nc]<=h||visited[nr][nc]) continue;
-
-			dfs(nr,nc,h);
-		}
-	}
-
-	private static void bfs(int r, int c, int h) {
-		Queue<int[]> queue = new LinkedList<>();
-		visited[r][c]=true;
-		queue.offer(new int[]{r,c});
-
-		while(queue.size()>0){
-			int[] cur = queue.poll();
-
+	private static void bfs(boolean[][] visited, int r, Point point) {
+		int[][] nd = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+		Queue<Point> queue = new LinkedList<>();
+		queue.add(point);
+		visited[point.y][point.x] = true;
+		while (!queue.isEmpty()) {
+			Point now = queue.poll();
 			for (int i = 0; i < 4; i++) {
-				int nr = cur[0]+dr[i];
-				int nc = cur[1]+dc[i];
-
-				if(nr<0||nc<0||nr>=N||nc>=N||
-						map[nr][nc]<=h||visited[nr][nc]) continue;
-
-				visited[nr][nc] = true;
-				queue.offer(new int[]{nr,nc});
+				int ny = now.y + nd[i][0];
+				int nx = now.x + nd[i][1];
+				if (ny < 0 || N <= ny || nx < 0 || N <= nx)
+					continue;
+				if (visited[ny][nx])
+					continue;
+				if (map[ny][nx] <= r)
+					continue;
+				queue.add(new Point(nx, ny));
+				visited[ny][nx] = true;
 			}
 		}
 	}
