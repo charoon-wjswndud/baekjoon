@@ -7,7 +7,7 @@ public class Main {
 	static int[] dColumn = {1, 1, 0, -1, -1, -1, 0, 1};
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		
 		while(true) {
 			int count = 0;
 			StringTokenizer st = new StringTokenizer(br.readLine());
@@ -32,9 +32,8 @@ public class Main {
 					}
 				}
 			}
-			sb.append(count + "\n");
+			System.out.println(count);
 		}
-		System.out.println(sb);
 	}
 
 	private static void dfs(int[][] map, boolean[][] visited, int r, int c) {
