@@ -1,52 +1,66 @@
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int[] dRow= {0, 1, 1, 1, 0, -1, -1, -1};
-	static int[] dColumn = {1, 1, 0, -1, -1, -1, 0, 1};
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		while(true) {
-			int count = 0;
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int column = Integer.parseInt(st.nextToken());
-			int row = Integer.parseInt(st.nextToken());
-			if(column == 0 && row == 0) break;
-			
-			int[][] map = new int[row][column];
-			for (int r = 0; r < row; r++) {
-				st = new StringTokenizer(br.readLine());
-				for (int c = 0; c < column; c++) {
-					map[r][c] = Integer.parseInt(st.nextToken());
-				}
-			}
-			
-			boolean[][] visited = new boolean[row][column];
-			for (int r = 0; r < row; r++) {
-				for (int c = 0; c < column; c++) {
-					if(map[r][c] == 1 && !visited[r][c]) {
-						dfs(map, visited, r, c);
-						count++;
-					}
-				}
-			}
-			System.out.println(count);
-		}
-	}
+    static int w, h;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        while (true) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            w = Integer.parseInt(st.nextToken());
+            h = Integer.parseInt(st.nextToken());
 
-	private static void dfs(int[][] map, boolean[][] visited, int r, int c) {
-		visited[r][c] = true;
-		for (int i = 0; i < 8; i++) {
-			int nextRow = r + dRow[i];
-			int nextColumn = c + dColumn[i];
-			if(0 <= nextRow && nextRow < visited.length &&
-					0 <= nextColumn && nextColumn < visited[0].length &&
-					!visited[nextRow][nextColumn] &&
-					map[nextRow][nextColumn] == 1) {
-					dfs(map, visited, nextRow, nextColumn);
-			}
-		}
-	}
+            if (w == 0 && h == 0)
+                break;
+
+            boolean[][] map = new boolean[h][w];
+            for (int i = 0; i < h; i++) {
+                st = new StringTokenizer(br.readLine());
+                for (int j = 0; j < w; j++) {
+                    map[i][j] = st.nextToken().equals("1");
+                }
+            }
+
+            int cnt = 0;
+            for (int i = 0; i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    if (!map[i][j])
+                        continue;
+                    bfs(map, i, j);
+                    cnt++;
+                }
+            }
+
+            sb.append(cnt).append("\n");
+        }
+        System.out.print(sb);
+    }
+
+    private static void bfs(boolean[][] map, int i, int j) {
+        int[][] nd = {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(new Point(j, i));
+        map[i][j] = false;
+
+        while (!queue.isEmpty()) {
+            Point now = queue.poll();
+            for (int k = 0; k < 8; k++) {
+                int ny = now.y + nd[k][0];
+                int nx = now.x + nd[k][1];
+
+                if (ny < 0 || h <= ny || nx < 0 || w <= nx)
+                    continue;
+                if (!map[ny][nx])
+                    continue;
+                queue.add(new Point(nx, ny));
+                map[ny][nx] = false;
+            }
+        }
+    }
 }
