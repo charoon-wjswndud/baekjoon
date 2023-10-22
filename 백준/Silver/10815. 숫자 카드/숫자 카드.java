@@ -1,35 +1,49 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		int[] arr = Arrays.stream(br.readLine().split(" "))
-				.mapToInt(Integer::parseInt)
-				.sorted()
-				.toArray();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
 
-		int M = Integer.parseInt(br.readLine());
-		StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(br.readLine());
+        int[] cards = new int[N];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++)
+            cards[i] = Integer.parseInt(st.nextToken());
 
-		for (int m = 0; m < M; m++)
-			System.out.print(binarySearch(arr, Integer.parseInt(st.nextToken()), 0, N-1) + " ");
+        Arrays.sort(cards);
 
-	}
+        int M = Integer.parseInt(br.readLine());
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            int target = Integer.parseInt(st.nextToken());
+            sb.append(binarySearch(cards, target) + " ");
+        }
 
-	private static int binarySearch(int[] arr, int target, int min, int max) {
-		if (min > max) return 0;
+        System.out.println(sb);
+    }
 
-		int mid = (min + max) / 2;
-		if(arr[mid] == target)
-			return 1;
-		else if(arr[mid] < target)
-			return binarySearch(arr, target, mid+1, max);
-		else
-			return binarySearch(arr, target, min, mid-1);
-	}
+    public static int binarySearch(int[] cards, int target) {
+        int first = 0;
+        int last = cards.length - 1;
+        int mid = 0;
+
+        while (first <= last) {
+            mid = (first + last) / 2;
+
+            if (cards[mid] == target)
+                return 1;
+
+            if (cards[mid] < target)
+                first = mid + 1;
+            else
+                last = mid - 1;
+        }
+        return 0;
+    }
+
 }
