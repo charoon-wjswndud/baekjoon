@@ -1,12 +1,11 @@
-
 public class Main {
-
-	public static void main(String[] args) {
-		System.out.println("|\\_/|");
-		System.out.println("|q p|   /}");
-		System.out.println("( 0 )\"\"\"\\");
-		System.out.println("|\"^\"`    |");
-		System.out.println("||_/=\\\\__|");
+	public static void main(String[] args){
+		StringBuffer sb = new StringBuffer();
+		sb.append("|\\_/|\n");
+		sb.append("|q p|   /}\n");
+		sb.append("( 0 )\"\"\"\\\n");
+		sb.append("|\"^\"`    |\n");    
+		sb.append("||_/=\\\\__|\n"); 
+		System.out.println(sb);
 	}
-
 }
