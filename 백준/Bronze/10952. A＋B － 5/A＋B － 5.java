@@ -1,18 +1,21 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import java.io.IOException;
+import java.util.StringTokenizer;
+ 
 public class Main {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		while(true) {
-			String line = br.readLine();
-			int A = line.charAt(0)-'0';
-			int B = line.charAt(2)-'0';
-			if(A==0&&B==0) 
-                break;
-			sb.append(A+B).append('\n');
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int A = Integer.parseInt(st.nextToken());
+			int B = Integer.parseInt(st.nextToken());
+			
+			if(A==0 && B==0)
+				break;
+			sb.append((A+B)).append('\n');
 		}
-		System.out.print(sb);
+		System.out.println(sb);
 	}
 }
