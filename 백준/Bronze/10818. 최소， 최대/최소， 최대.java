@@ -1,24 +1,23 @@
+import java.util.Arrays;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.StringTokenizer;
-
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int num = Integer.parseInt(br.readLine());
-		int[] numArr = new int[num];
+		int N = Integer.parseInt(br.readLine());
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < num; i++) {
-			numArr[i] = Integer.parseInt(st.nextToken());
+        
+		int index = 0;
+		int[] arr = new int[N];
+		while(st.hasMoreTokens()) {
+			arr[index] = Integer.parseInt(st.nextToken());
+			index++;
 		}
-		int minNum = numArr[0];
-		int maxNum = numArr[0];
-		for (int i = 1; i < num; i++) {
-			minNum = Math.min(minNum, numArr[i]);
-			maxNum = Math.max(maxNum, numArr[i]);
-		}	
-		System.out.printf("%d %d", minNum, maxNum);
+		
+		Arrays.sort(arr);
+        
+		System.out.print(arr[0] + " " + arr[N - 1]);
 	}
 }
