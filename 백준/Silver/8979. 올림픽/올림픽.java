@@ -1,84 +1,77 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.IOException;
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		ArrayList<Country> countries = new ArrayList<>();
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			countries.add(new Country(Integer.parseInt(st.nextToken()), 
-									  Integer.parseInt(st.nextToken()), 
-									  Integer.parseInt(st.nextToken()),
-									  Integer.parseInt(st.nextToken())));
-		}
-		Collections.sort(countries);
-		int rate = 1;
-		int cnt = 1;
-		if (countries.get(0).getCountryNum() == K) {
-	       System.out.println(1);
-	       return;
-		}
-	   	for (int i = 1; i < N; i++) {
-	   	Country pre = countries.get(i-1);	//과거
-	   	Country cur = countries.get(i);		//현재
-	   		if ((pre.getGold() != cur.getGold()) || 
-	   				(pre.getSilver() != cur.getSilver()) || 
-	   				(pre.getBronze() != cur.getBronze())) {
-	   			rate += cnt;
-	   			cnt = 1;
-	   		}
-	   		else cnt++;
-	   		
-	   		if (cur.getCountryNum() == K) {
-	   			System.out.println(rate);
-	   			break;
-	   		}
-	   	}
-	}
-}
-class Country implements Comparable<Country>{
-	private int countryNum;
-	private int gold;
-	private int silver;
-	private int bronze;
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public Country(int countryNum, int gold, int silver, int bronze) {
-		this.countryNum = countryNum;
-		this.gold = gold;
-		this.silver = silver;
-		this.bronze = bronze;
-	}
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-	public int getGold() {
-		return gold;
-	}
-
-	public int getSilver() {
-		return silver;
-	}
-
-	public int getBronze() {
-		return bronze;
-	}
-	public int getCountryNum() {
-		return countryNum;
-	}
-
-	@Override
-	public int compareTo(Country o) {
-		if (this.gold == o.gold) {
-            if (this.silver == o.silver) return o.bronze - this.bronze;
-            else return o.silver - this.silver;
+        List<Country> countries = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(br.readLine());
+            int num = Integer.parseInt(st.nextToken());
+            int gold = Integer.parseInt(st.nextToken());
+            int silver = Integer.parseInt(st.nextToken());
+            int bronze = Integer.parseInt(st.nextToken());
+            countries.add(new Country(num, gold, silver, bronze));
         }
-        else return o.gold - this.gold;
-	}
+        Collections.sort(countries);
+
+        int index = -1;
+        for (int i = 0; i < N; i++) {
+            if (countries.get(i).num != K)
+                continue;
+            index = i;
+            break;
+        }
+
+        if (index == 0)
+            System.out.println(1);
+        else if (!countries.get(index).equals(countries.get(index-1)))
+            System.out.println(index+1);
+        else {
+            int cnt = 2;
+            while (countries.get(index).equals(countries.get(index-cnt)))
+                cnt++;
+            System.out.println(index-cnt+2);
+        }
+    }
+
+    private static class Country implements Comparable<Country>{
+        int num;
+        int gold;
+        int silver;
+        int bronze;
+
+        public Country(int num, int gold, int silver, int bronze) {
+            this.num = num;
+            this.gold = gold;
+            this.silver = silver;
+            this.bronze = bronze;
+        }
+
+        @Override
+        public int compareTo(Country o) {
+            if (this.gold != o.gold)
+                return Integer.compare(o.gold, this.gold);
+            if (this.silver != o.silver)
+                return Integer.compare(o.silver, this.silver);
+            if (this.bronze != o.bronze)
+                return Integer.compare(o.bronze, this.bronze);
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            Country o = (Country) obj;
+            if (this.gold == o.gold && this.silver == o.silver && this.bronze == o.bronze)
+                return true;
+            return false;
+        }
+    }
 }
