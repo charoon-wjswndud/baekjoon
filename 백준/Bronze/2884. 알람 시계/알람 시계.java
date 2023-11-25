@@ -1,22 +1,21 @@
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalTime;
 import java.util.StringTokenizer;
+
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
- 		String s = br.readLine();
-		StringTokenizer st = new StringTokenizer(s," ");
-		int H = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		if(M < 45) {
-			H--;
-			M = 60 - (45 - M);
-			if(H < 0)
-				H = 23;
-			System.out.println(H + " " + M);
-		}
-		else 
-			System.out.println(H + " " + (M - 45));
-   }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int H = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+
+        LocalTime localTime = LocalTime.of(H, M).minusMinutes(45);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(localTime.getHour()).append(" ").append(localTime.getMinute());
+        System.out.println(sb);
+    }
 }
