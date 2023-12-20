@@ -1,94 +1,72 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static int R, C, N;
-    static Bomb[][] map;
-    public static void main(String[] args) throws IOException {
-        init();
+    private static int R, C;
 
-        for (int time = 2; time <= N; time++) {
-            plusTime();
-            if(time%2 == 0) setBomb();
-            else explosion();
+    static final int NONE = -1;
+    static int[][] map;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        R = Integer.parseInt(st.nextToken());
+        C = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken())-1;
+
+        map = new int[R][C];
+        for (int i = 0; i < R; i++) {
+            char[] line = br.readLine().toCharArray();
+            for (int j = 0; j < C; j++) {
+                map[i][j] = line[j] == '.' ? NONE : 2;
+            }
         }
 
-        //print
+        while (N-- > 0) {
+            setBomb();
+            explode();
+        }
         StringBuilder sb = new StringBuilder();
-        for (int r = 0; r < R; r++) {
-            for (int c = 0; c < C; c++) {
-                if(map[r][c] == null) sb.append('.');
-                else sb.append('O');
+        for (int[] row :
+                map) {
+            for (int col :
+                    row) {
+                sb.append(col == NONE ? '.' : 'O');
             }
             sb.append("\n");
         }
         System.out.println(sb);
+
     }
 
-    private static void explosion() {
-        final int[][] direction = {{0, 1}, {1, 0} ,{0, -1}, {-1, 0}};
-        for(int r = 0; r <R; r++) {
-            for(int c = 0; c <C; c++) {
-                if(map[r][c] != null && 3 <= map[r][c].time) {
-                    map[r][c].status = false;
-                    for (int d = 0; d < direction.length; d++) {
-                        int nr = r+direction[d][0];
-                        int nc = c+direction[d][1];
-                        if(0 <= nr && nr < R && 0 <= nc && nc < C && map[nr][nc] != null){
-                            map[nr][nc].status= false;
-                        }
-                    }
+    private static void explode() {
+        final int[][] direction = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                if (map[i][j] != 0)
+                    continue;
+                for (int[] nd :
+                        direction) {
+                    int ny = i + nd[0];
+                    int nx = j + nd[1];
+                    if (ny < 0 || R <= ny || nx <0 || C <= nx)
+                        continue;
+                    if (map[ny][nx] == 0)
+                        continue;
+                    map[ny][nx] = NONE;
                 }
-            }
-        }
-
-        for(int r = 0; r <R; r++) {
-            for(int c = 0; c <C; c++) {
-                if(map[r][c] != null && map[r][c].status == false) map[r][c] = null;
+                map[i][j] = NONE;
             }
         }
     }
 
     private static void setBomb() {
-        for(int r = 0; r <R; r++) {
-            for(int c = 0; c <C; c++) {
-                if(map[r][c] == null) map[r][c] = new Bomb(0);
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                map[i][j] = map[i][j] == -1 ? 3 : map[i][j]-1;
             }
-        }
-    }
-
-    private static void plusTime() {
-        for(int r = 0; r <R; r++) {
-            for(int c = 0; c <C; c++) {
-                if(map[r][c] != null) map[r][c].time++;
-            }
-        }
-    }
-
-    private static void init() throws IOException {
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        N = Integer.parseInt(st.nextToken());
-        map = new Bomb[R][C];
-
-        for(int r = 0; r <R; r++) {
-            String string = br.readLine();
-            for(int c = 0; c <C; c++) {
-                if(string.charAt(c) == 'O') map[r][c] = new Bomb(1);
-            }
-        }
-    }
-
-    static class Bomb{
-        int time;
-        boolean status;
-        public Bomb(int time) {
-            this.time = time;
-            this.status = true;
         }
     }
 }
