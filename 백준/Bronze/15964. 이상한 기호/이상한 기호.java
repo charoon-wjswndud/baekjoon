@@ -8,13 +8,13 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int A = Integer.parseInt(st.nextToken());
-		int B = Integer.parseInt(st.nextToken());
+		long A = Integer.parseInt(st.nextToken());
+		long B = Integer.parseInt(st.nextToken());
 
 		System.out.println(calc(A, B));
 	}
 
-	private static int calc(int a, int b) {
+	private static long calc(long a, long b) {
 		return (a+b)*(a-b);
 	}
 }
