@@ -36,7 +36,7 @@ public class Main {
     }
 
     private static boolean bellmanFord_cycle(List<Edge> graph, int N) {
-        long[] dist = new long[N+1];
+        int[] dist = new int[N+1];
 
         for (int i = 0; i < N; i++) {
             for (Edge e :
