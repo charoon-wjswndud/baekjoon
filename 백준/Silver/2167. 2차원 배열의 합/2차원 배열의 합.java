@@ -1,42 +1,40 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		StringBuilder sb = new StringBuilder();
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int[][] arr = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+		
+		int k = Integer.parseInt(br.readLine());
+		for (int t = 0; t < k; t++) {
+			st = new StringTokenizer(br.readLine());
+			int i = Integer.parseInt(st.nextToken()) - 1;
+			int j = Integer.parseInt(st.nextToken()) - 1;
+			int x = Integer.parseInt(st.nextToken()) - 1;
+			int y = Integer.parseInt(st.nextToken()) - 1;
+			int sum = 0;
 
-        int[][] arr = new int[N][M];
-
-        for (int n = 0; n < N; n++) {
-            st = new StringTokenizer(br.readLine());
-            for (int m = 0; m < M; m++) {
-                arr[n][m] = Integer.parseInt(st.nextToken());
-            }
-        }
-
-        int[][] sumArr = new int[N+1][M+1];
-        for (int n = 1; n < N + 1; n++) {
-            for (int m = 1; m < M + 1; m++) {
-                sumArr[n][m] = arr[n-1][m-1] + sumArr[n-1][m] + sumArr[n][m-1] - sumArr[n-1][m-1];
-            }
-        }
-
-        StringBuilder sb = new StringBuilder();
-        int K = Integer.parseInt(br.readLine());
-        for (int k = 0; k < K; k++) {
-            st = new StringTokenizer(br.readLine());
-            int i = Integer.parseInt(st.nextToken());
-            int j = Integer.parseInt(st.nextToken());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            sb.append(sumArr[x][y] - sumArr[i-1][y] - sumArr[x][j-1] + sumArr[i-1][j-1]).append("\n");
-        }
-        System.out.print(sb);
-    }
+			for (int p = i; p <= x; p++) {
+				for (int q = j; q <= y; q++) {
+					sum += arr[p][q];
+				}
+			}
+			
+			sb.append(sum).append("\n");
+		}
+		System.out.print(sb);
+	}
 }
