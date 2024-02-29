@@ -4,74 +4,66 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String args[]) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        st = new StringTokenizer(br.readLine());
-        final int N = Integer.parseInt(st.nextToken());
-        final int M = Integer.parseInt(st.nextToken());
-        final int K = Integer.parseInt(st.nextToken());
-        final int X = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken());   // 도시의 개수
+        int M = Integer.parseInt(st.nextToken());   // 도로의 개수
+        int K = Integer.parseInt(st.nextToken());   // 거리 정보
+        int X = Integer.parseInt(st.nextToken());   // 출발 도시의 번호
 
-        List<List<Node>> graph = new ArrayList<>();
-        for (int i = 0; i <= N; i++) {
-            graph.add(new ArrayList<>());
-        }
-
+        Map<Integer, List<Integer>> graph = new HashMap<>();
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int A = Integer.parseInt(st.nextToken());
             int B = Integer.parseInt(st.nextToken());
 
-            graph.get(A).add(new Node(B, 1));
+            graph.putIfAbsent(A, new ArrayList<>());
+            graph.get(A).add(B);
         }
 
-        int[] dist = new int[N + 1];
-        Arrays.fill(dist, Integer.MAX_VALUE);
+        int[] distances = new int[N + 1];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        distances[X] = 0;
 
-        boolean[] visited = new boolean[N+1];
+        //다익스트라
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
+        pq.offer(new int[]{X, 0});
 
-        PriorityQueue<Node> queue = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.weight, o2.weight));
-        queue.add(new Node(X, 0));
-        dist[X] = 0;
+        while (!pq.isEmpty()) {
+            int[] current = pq.poll();
+            int currentNode = current[0];
+            int distance = current[1];
 
-        while (!queue.isEmpty()) {
-            Node now = queue.poll();
-
-            if (visited[now.dest])
+            if (distances[currentNode] < distance) {
                 continue;
+            }
 
-            visited[now.dest] = true;
-
-            for (Node next :
-                    graph.get(now.dest)) {
-                if (dist[now.dest] + next.weight < dist[next.dest]) {
-                    dist[next.dest] = dist[now.dest] + next.weight;
-                    queue.add(new Node(next.dest, dist[next.dest]));
+            List<Integer> neighbors = graph.getOrDefault(currentNode, new ArrayList<>());
+            for (int neighbor : neighbors) {
+                int newDist = distance + 1;
+                if (newDist < distances[neighbor]) {
+                    distances[neighbor] = newDist;
+                    pq.offer(new int[]{neighbor, newDist});
                 }
             }
         }
+
         StringBuilder sb = new StringBuilder();
+        boolean exists = false;
         for (int i = 1; i <= N; i++) {
-            if (dist[i] != K)
-                continue;
-            sb.append(i).append("\n");
+            if (distances[i] == K) {
+                sb.append(i).append("\n");
+                exists = true;
+            }
         }
 
-        if (sb.length() == 0)
-            sb.append(-1);
+        if (!exists) {
+            sb.append("-1");
+        }
 
+        // 최종 결과 출력
         System.out.println(sb);
-    }
-
-    public static class Node{
-        int dest;
-        int weight;
-
-        public Node(int dest, int weight) {
-            this.dest = dest;
-            this.weight = weight;
-        }
     }
 }
