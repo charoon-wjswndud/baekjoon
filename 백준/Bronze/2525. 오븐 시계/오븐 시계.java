@@ -1,23 +1,20 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
-        int A = Integer.parseInt(st.nextToken());
-        int B = Integer.parseInt(st.nextToken());
-        
-        int C = Integer.parseInt(br.readLine());
- 
-        int min = 60 *A+B; 
-        min += C;
-        
-        int h = min/60%24;
-        int m = min%60;
 
-        System.out.println(h + " " + m);
+        int hour = Integer.parseInt(st.nextToken());
+        int min = Integer.parseInt(st.nextToken());
+        int duration = Integer.parseInt(br.readLine());
+
+        min += duration;
+        hour += min / 60;
+        min %= 60;
+        hour %= 24;
+
+        System.out.println(hour + " " + min);
     }
 }
