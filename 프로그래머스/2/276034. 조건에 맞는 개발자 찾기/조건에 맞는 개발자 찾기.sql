@@ -9,4 +9,4 @@ WHERE SKILL_CODE & (
     WHERE
         NAME IN ('Python', 'C#')
 )
-ORDER BY ID ASC;
+ORDER BY ID ASC
