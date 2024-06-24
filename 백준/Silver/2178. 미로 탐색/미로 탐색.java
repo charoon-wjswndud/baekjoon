@@ -1,56 +1,58 @@
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int Y = Integer.parseInt(st.nextToken());
-		int X = Integer.parseInt(st.nextToken());
-		boolean[][] map = new boolean[Y][X];
-		boolean[][] visited = new boolean[Y][X];
-		for (int i = 0; i < Y; i++) {
-			char[] line = br.readLine().toCharArray();
-			for (int j = 0; j < X; j++) {
-				map[i][j] = line[j] == '1';
-			}
-		}
+    public static Deque<Integer> deque;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int[] dy = {0, 1, 0, -1};
-		int[] dx = {1, 0, -1, 0};
-		Queue<CustomPoint> queue = new LinkedList<>();
-		queue.add(new CustomPoint(0, 0, 1));
-		visited[0][0] = true;
-		CustomPoint last = null;
-		while (!queue.isEmpty()) {
-			CustomPoint now = queue.poll();
-			last = now;
-			if (now.x == X-1 && now.y == Y-1)
-				break;
-			for (int i = 0; i < 4; i++) {
-				int nx = now.x + dx[i];
-				int ny = now.y + dy[i];
-				if (nx < 0 || X <= nx || ny < 0 || Y <= ny)
-					continue;
-				if (visited[ny][nx])
-					continue;
-				if (!map[ny][nx])
-					continue;
-				queue.add(new CustomPoint(nx, ny, now.cnt+1));
-				visited[ny][nx] = true;
-			}
-		}
-		System.out.println(last.cnt);
-	}
-	private static class CustomPoint extends Point{
-		int cnt;
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-		public CustomPoint(int x, int y, int cnt) {
-			super(x, y);
-			this.cnt = cnt;
-		}
-	}
+        boolean[][] map = new boolean[N][M];
+
+        for (int r = 0; r < N; r++) {
+            char[] row = br.readLine().toCharArray();
+            for (int c = 0; c < M; c++) {
+                map[r][c] = row[c] == '1';
+            }
+        }
+
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(new Point(0, 0, 1));
+        map[0][0] = false;
+        int[][] dr = {{0, 1},{1, 0},{-1, 0},{0, -1}};
+        Point now = queue.peek();
+        while (!queue.isEmpty()) {
+            now = queue.poll();
+            if (now.r == N-1 && now.c == M-1) {
+                break;
+            }
+            for (int[] nd : dr) {
+                int nr = now.r + nd[0];
+                int nc = now.c + nd[1];
+                if (nr < 0 || N <= nr || nc < 0 || M <= nc)
+                    continue;
+                if (!map[nr][nc])
+                    continue;
+                queue.add(new Point(nr, nc, now.cnt+1));
+                map[nr][nc] = false;
+            }
+        }
+
+        System.out.println(now.cnt);
+    }
+
+    private static class Point {
+        int r;
+        int c;
+        int cnt;
+
+        public Point(int r, int c, int cnt) {
+            this.r = r;
+            this.c = c;
+            this.cnt = cnt;
+        }
+    }
 }
